@@ -204,13 +204,13 @@
 
 <p id="updateMsg">
     {% if updated %}
-        ✅ <strong>Short URL updated!</strong><br>
+        <strong>Short URL updated!</strong><br>
         <strong>New Long URL:</strong> <a href="{{ data.url }}" target="_blank">{{ data.url }}</a><br>
         <strong>Short Code:</strong> {{ data.shortCode }}<br>
         <strong>Access Count:</strong> {{ data.accessCount }}<br>
         <strong>Updated At:</strong> {{ data.updatedAt }}
     {% elif update_error %}
-        ❌ {{ update_error }}
+        {{ update_error }}
     {% endif %}
 </p>
 
