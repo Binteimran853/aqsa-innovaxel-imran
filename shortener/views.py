@@ -1,3 +1,4 @@
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -8,7 +9,8 @@ from .serializers import URLSerializer
 from .models import URL as ShortenedURL
 from django.shortcuts import render
 from .utils import generate_shortcode
-# HOME PAGE
+import os
+BASE_URL = os.getenv("BASE_URL")  # fallback if not found
 
 def home(request):
     context = {}
@@ -27,7 +29,8 @@ def home(request):
         context = {
             'message': message,
             'url': url,
-            'short_url': f"http://127.0.0.1:8000/{obj.shortCode}",
+         
+            'short_url': f"{BASE_URL}{obj.shortCode}",
             'shortCode': obj.shortCode,
             'access_count': obj.accessCount
         }
@@ -163,7 +166,7 @@ class DeleteShortURL(View):
 
         return render(request, "shortener/shorturl.html", {
             "delete_msg": delete_msg,
-            "short_url": f"http://127.0.0.1:8000/{shortCode}",
+            "short_url": f"{BASE_URL}{shortCode}",
         })
 
 

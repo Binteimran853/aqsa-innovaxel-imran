@@ -144,7 +144,7 @@
       action="{% url 'GetStats' shortCode='placeholder' %}"
       onsubmit="this.action = this.action.replace('placeholder', this.short_url.value.split('/').pop())">
     <input type="text" name="short_url" class="input"
-           placeholder="Enter full short URL (e.g., http://127.0.0.1:8000/abc123)"
+           placeholder="Enter full short URL (e.g., http://www.example.com/some/short/abc123)"
            required>
     <button type="submit">Get Stats</button>
 </form>
@@ -174,7 +174,7 @@
     {% csrf_token %}
     <input type="hidden" name="_method" value="DELETE">
     
-    <input type="text" name="short_url" placeholder="Enter full short URL (e.g., http://127.0.0.1:8000/abc123)" required>
+    <input type="text" name="short_url" placeholder="Enter full short URL (e.g., http://www.example.com/some/short/url/123)" required>
     
     <button type="submit">Delete</button>
 </form>
@@ -192,11 +192,11 @@
     <input type="hidden" name="_method" value="PUT">
 
     <input type="text" name="short_url" id="updateShortUrl"
-           placeholder="Enter short URL (e.g., http://127.0.0.1:8000/abc123)"
+           placeholder="Enter short URL (e.g., http://www.example.com/some/short/abc123)"
            required value="{{ short_url }}">
 
     <input type="url" name="new_url" id="newUrl"
-           placeholder="Enter new long URL"
+           placeholder="https://www.example.com/some/updated/url"
            required value="{{ new_url }}">
 
     <button type="submit">Update URL</button>
@@ -218,7 +218,7 @@
         <h2>Retrieve Original URL</h2>
 
 <form method="get" action="{% url 'retrieve_url' %}">
-    <input type="text" name="short_url" placeholder="Enter short URL (e.g. http://127.0.0.1:8000/iZLv1h)">
+    <input type="text" name="short_url" placeholder="Enter short URL (e.g. https://www.example.com/some/short/abc123)">
     <button type="submit">Get Original URL</button>
 </form>
 
@@ -229,7 +229,7 @@
 {% endif %}
 
     </div>
-    <script src="{% static 'shortener/script.js' %}"></script>
+    
 </body>
 
 </html>
