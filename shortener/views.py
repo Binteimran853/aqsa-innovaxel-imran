@@ -10,6 +10,30 @@ from django.shortcuts import render
 from .utils import generate_shortcode
 # HOME PAGE
 
+def home(request):
+    context = {}
+    if request.method == 'POST':
+        url = request.POST.get('url')
+        obj = ShortenedURL.objects.filter(url=url).first()
+        if obj is None:
+            obj = ShortenedURL.objects.create(
+                url=url,
+                shortCode=generate_shortcode()
+            )
+            message = 'Short URL generated!'
+        else:
+            message = 'Short URL already exists!'
+
+        context = {
+            'message': message,
+            'url': url,
+            'short_url': f"http://127.0.0.1:8000/{obj.shortCode}",
+            'shortCode': obj.shortCode,
+            'access_count': obj.accessCount
+        }
+    return render(request, 'shortener/shorturl.html', context)
+
+
 # TO CREATE A SHORT URL
 class CreateShortURL(APIView):
     def post(self, request):
