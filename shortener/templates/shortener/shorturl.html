@@ -185,8 +185,8 @@
 
 
 
-        <!-- TO UPDATE THE URL WITH IT'S SHORT CODE -->
-       
+        <!-- TO UPDATE THE URL WITH IT'S SHORT URL -->
+        <h2>Update URL</h2>
 <form method="POST" action="{% url 'update_url' %}">
     {% csrf_token %}
     <input type="hidden" name="_method" value="PUT">
