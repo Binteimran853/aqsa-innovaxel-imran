@@ -72,7 +72,7 @@ class CreateShortURL(APIView):
     
 from django.shortcuts import render
 from django.views import View
-
+from urllib.parse import urlparse
 # TO RETRIVE ORIGINAL ONE
 class RetrieveOriginalURLView(View):
     def get(self, request):
