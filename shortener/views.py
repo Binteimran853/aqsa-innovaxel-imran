@@ -42,7 +42,7 @@ class CreateShortURL(APIView):
         if not original_url:
             return Response({"error": "URL is required"}, status=400)
 
-        # ✅ Check if URL already exists
+        # Check if URL already exists
         existing = ShortenedURL.objects.filter(url=original_url).first()
         if existing:
             serializer = URLSerializer(existing)
