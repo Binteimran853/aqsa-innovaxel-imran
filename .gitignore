@@ -9,7 +9,7 @@ __pycache__/
 *.log
 
 # Environment
-.env
+
 venv/
 env/
 ENV/
