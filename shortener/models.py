@@ -1,6 +1,4 @@
 from django.db import models
-import string
-import random
 from .utils import generate_shortcode
 
 class URL(models.Model):

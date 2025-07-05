@@ -86,7 +86,7 @@ class RetrieveOriginalURLView(View):
         if short_url:
             try:
                 # Extract shortcode from full short URL
-                path = urlparse(short_url).path.strip('/')  # e.g., /iZLv1h → iZLv1h
+                path = urlparse(short_url).path.strip('/')  
                 url_obj = URL.objects.get(shortCode=path)
                 url_obj.accessCount += 1
                 url_obj.save()
@@ -117,7 +117,7 @@ class UpdateShortURL(APIView):
         if short_url and new_url:
             try:
                 # Extract shortCode from full short URL
-                short_code = urlparse(short_url).path.strip('/')  # e.g., from /abc123
+                short_code = urlparse(short_url).path.strip('/')  
 
                 # Find and update the object
                 url_obj = URL.objects.get(shortCode=short_code)
