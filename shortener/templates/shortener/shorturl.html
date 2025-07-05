@@ -1,0 +1,235 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+
+
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f2f6ff, #e0e7ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="url"],
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccd6dd;
+            font-size: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="url"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background-color: #43a047;
+            transform: scale(1.02);
+        }
+
+        p {
+            font-size: 15px;
+            color: #444;
+            margin: 6px 0;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            background-color: #f9f9f9;
+        }
+
+        #statsResult,
+        #updateMsg,
+        #deleteMsg,
+        #redirectMsg {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>URL Shortener</h1>
+       <form action="{% url 'home' %}" method="POST">
+    {% csrf_token %}
+    <input type="url" name="url" placeholder="Enter URL here" required>
+    <button type="submit">Shorten</button>
+</form>
+
+
+        {% if short_url %}
+        <div class="result">
+            <p><strong>Short URL:</strong> <a href="{{ short_url }}" target="_blank">{{ short_url }}</a></p>
+            <p><strong>Original URL:</strong> <a href="{{ url }}" target="_blank">{{ url }}</a></p>
+            <p><strong>Short Code:</strong> {{ shortCode }}</p>
+            <p><strong>Access Count:</strong> {{ access_count }}</p>
+        </div>
+        {% endif %}
+
+
+        <!-- TO GET STATISTICS -->
+ <h2>Get Short URL Statistics</h2>
+
+<form method="GET"
+      action="{% url 'GetStats' shortCode='placeholder' %}"
+      onsubmit="this.action = this.action.replace('placeholder', this.short_url.value.split('/').pop())">
+    <input type="text" name="short_url" class="input"
+           placeholder="Enter full short URL (e.g., http://127.0.0.1:8000/abc123)"
+           required>
+    <button type="submit">Get Stats</button>
+</form>
+
+{% if stats_error %}
+    <p style="color:red; margin-top:10px;">{{ stats_error }}</p>
+{% endif %}
+
+{% if stats_data %}
+    <div class="result" style="margin-top: 20px;">
+        <p><strong>ID:</strong> {{ stats_data.id }}</p>
+        <p><strong>Original URL:</strong> <a href="{{ stats_data.url }}" target="_blank">{{ stats_data.url }}</a></p>
+        <p><strong>Short Code:</strong> {{ stats_data.shortCode }}</p>
+        <p><strong>Created At:</strong> {{ stats_data.createdAt }}</p>
+        <p><strong>Updated At:</strong> {{ stats_data.updatedAt }}</p>
+        <p><strong>Access Count:</strong> {{ stats_data.accessCount }}</p>
+    </div>
+{% endif %}
+
+
+
+
+        <!-- to delete any existing url -->
+  <h2>Delete a Short URL</h2>
+
+<form method="POST" action="{% url 'delete_short_url' shortCode='placeholder' %}" onsubmit="this.action = this.action.replace('placeholder', this.short_url.value.split('/').pop())">
+    {% csrf_token %}
+    <input type="hidden" name="_method" value="DELETE">
+    
+    <input type="text" name="short_url" placeholder="Enter full short URL (e.g., http://127.0.0.1:8000/abc123)" required>
+    
+    <button type="submit">Delete</button>
+</form>
+
+{% if delete_msg %}
+    <p style="margin-top: 10px;">{{ delete_msg }}</p>
+{% endif %}
+
+
+
+        <!-- TO UPDATE THE URL WITH IT'S SHORT CODE -->
+       
+<form method="POST" action="{% url 'update_url' %}">
+    {% csrf_token %}
+    <input type="hidden" name="_method" value="PUT">
+
+    <input type="text" name="short_url" id="updateShortUrl"
+           placeholder="Enter short URL (e.g., http://127.0.0.1:8000/abc123)"
+           required value="{{ short_url }}">
+
+    <input type="url" name="new_url" id="newUrl"
+           placeholder="Enter new long URL"
+           required value="{{ new_url }}">
+
+    <button type="submit">Update URL</button>
+</form>
+
+<p id="updateMsg">
+    {% if updated %}
+        ✅ <strong>Short URL updated!</strong><br>
+        <strong>New Long URL:</strong> <a href="{{ data.url }}" target="_blank">{{ data.url }}</a><br>
+        <strong>Short Code:</strong> {{ data.shortCode }}<br>
+        <strong>Access Count:</strong> {{ data.accessCount }}<br>
+        <strong>Updated At:</strong> {{ data.updatedAt }}
+    {% elif update_error %}
+        ❌ {{ update_error }}
+    {% endif %}
+</p>
+
+        <!-- TO RETRIVE ORIGINAL URL -->
+        <h2>Retrieve Original URL</h2>
+
+<form method="get" action="{% url 'retrieve_url' %}">
+    <input type="text" name="short_url" placeholder="Enter short URL (e.g. http://127.0.0.1:8000/iZLv1h)">
+    <button type="submit">Get Original URL</button>
+</form>
+
+{% if original_url %}
+    <p><strong>Original URL:</strong> <a href="{{ original_url }}" target="_blank">{{ original_url }}</a></p>
+{% elif error %}
+    <p style="color:red;">{{ error }}</p>
+{% endif %}
+
+    </div>
+    <script src="{% static 'shortener/script.js' %}"></script>
+</body>
+
+</html>
