@@ -14,10 +14,11 @@ This project is a Django-based URL Shortener application built as part of the In
 git clone https://github.com/Binteimran853/aqsa-innovaxel-imran.git
 cd aqsa-innovaxel-imran
 git checkout dev
-```
+
 python3 -m venv env
 source env/bin/activate 
 pip install -r requirements.txt
 python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py runserver
+```
