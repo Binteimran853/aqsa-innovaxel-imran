@@ -177,11 +177,7 @@ class GetStats(View):
                 "stats_data": serializer.data,
                 "stats_error": None
             })
-        except URL.DoesNotExist:
-            return render(request, 'shortener/shorturl.html', {
-                "stats_data": None,
-                "stats_error": "Short URL not found."
-            })
+        
 
 
     
