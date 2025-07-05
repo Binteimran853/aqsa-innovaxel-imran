@@ -46,7 +46,13 @@ class CreateShortURL(APIView):
         existing = ShortenedURL.objects.filter(url=original_url).first()
         if existing:
             serializer = URLSerializer(existing)
-            
+            return Response(
+                {
+                    "message": "Short URL already exists!",
+                    **serializer.data
+                },
+                status=200
+            )
 
         # f not, create new one
         short_code = generate_shortcode()
